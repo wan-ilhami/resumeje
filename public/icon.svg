@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="1024" height="1024" viewBox="0 0 1024 1024" fill="none">
+  <!-- color -->
+  <defs>
+    <style>
+      .stroke { stroke: #0B3B57; stroke-width: 36; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+      .fill { fill: #0B3B57; }
+    </style>
+  </defs>
+
+  <!-- left stacked page outline (slightly behind) -->
+  <path class="stroke" d="M240 344
+                         a48 48 0 0 1 48 -48
+                         h8
+                         v448
+                         a48 48 0 0 1 -48 48
+                         " transform="translate( -18 0)"/>
+
+  <!-- right stacked page outline (slightly behind) -->
+  <path class="stroke" d="M784 344
+                         a48 48 0 0 0 -48 -48
+                         h-8
+                         v448
+                         a48 48 0 0 0 48 48
+                         " transform="translate( 18 0)"/>
+
+  <!-- main rounded document -->
+  <rect x="232" y="240" width="560" height="560" rx="48" class="stroke"/>
+
+  <!-- upload triangle (filled) -->
+  <path class="fill" d="M512 192
+                        L588 304
+                        H436
+                        L512 192
+                        Z" />
+
+  <!-- three horizontal text lines -->
+  <line x1="360" y1="464" x2="664" y2="464" class="stroke" />
+  <line x1="360" y1="568" x2="664" y2="568" class="stroke" />
+  <line x1="360" y1="672" x2="664" y2="672" class="stroke" />
+
+</svg>
