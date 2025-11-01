@@ -1,6 +1,7 @@
 import { Providers } from './providers/page'
 import './globals.css'
-import pkg from '../package.json'
+import pkg from '../../package.json'
+
 
 const version = pkg.version
 const commit = process.env.VERCEL_GIT_COMMIT_SHA?.slice(0, 7) || 'local'
