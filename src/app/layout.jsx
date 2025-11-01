@@ -1,7 +1,6 @@
-import { Providers } from './providers/page'
+import { Providers } from './providers'
 import './globals.css'
 import pkg from '../../package.json'
-
 
 const version = pkg.version
 
@@ -15,14 +14,12 @@ export const metadata = {
 }
 
 export default function RootLayout({ children }) {
-
   if (process.env.NODE_ENV === 'development') {
-  console.log(`🧱 Resume Builder v${version}`)
-}
+    console.log(`🧱 Resume Builder v${version}`)
+  }
 
   return (
     <html lang="en" suppressHydrationWarning>
-      {/* <link rel="shortcut icon" href="" /> */}
       <body className="min-h-screen antialiased">
         <Providers>
           {children}
