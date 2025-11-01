@@ -2,7 +2,7 @@
 
 import { Provider } from 'react-redux';
 import { ThemeProvider } from 'next-themes'
-import { setupStore } from "@/store/page";
+import { setupStore } from "@/store";
 import LayoutWrapper from '@/components/layout/wrapper'
 
 export function Providers({ children }) {

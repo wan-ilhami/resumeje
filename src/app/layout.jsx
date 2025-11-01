@@ -1,4 +1,4 @@
-import { Providers } from '@/providers/page'
+import { Providers } from '@/providers'
 import './globals.css'
 import pkg from '../../package.json'
 
