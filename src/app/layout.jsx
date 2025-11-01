@@ -4,7 +4,6 @@ import pkg from '../../package.json'
 
 
 const version = pkg.version
-const commit = process.env.VERCEL_GIT_COMMIT_SHA?.slice(0, 7) || 'local'
 
 export const metadata = {
   title: 'Resume Builder',
@@ -12,7 +11,7 @@ export const metadata = {
   icons: {
     icon: "/icon.svg",
   },
-  generator: `Resume Builder v${version} (${commit})`,
+  generator: `Resume Builder v${version}`,
 }
 
 export default function RootLayout({ children }) {
