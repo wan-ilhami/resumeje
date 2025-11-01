@@ -14,9 +14,6 @@ export const metadata = {
 }
 
 export default function RootLayout({ children }) {
-  if (process.env.NODE_ENV === 'development') {
-    console.log(`🧱 Resume Builder v${version}`)
-  }
 
   return (
     <html lang="en" suppressHydrationWarning>
