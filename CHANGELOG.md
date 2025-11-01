@@ -1,3 +1,12 @@
+# [1.1.0](https://github.com/wan-ilhami/resumeje/compare/v1.0.0...v1.1.0) (2025-11-01)
+
+
+### Features
+
+* add test feature ([a795a86](https://github.com/wan-ilhami/resumeje/commit/a795a86e48845fc88272f0171f6ffa72ff34b667))
+* add test feature ([db250ae](https://github.com/wan-ilhami/resumeje/commit/db250ae307988c6df39dcdd33780e1ab48ac1aa0))
+* add test feature ([592bb32](https://github.com/wan-ilhami/resumeje/commit/592bb325fb8674b5f651f897a2f1838dac24805d))
+
 # 1.0.0 (2025-11-01)
 
 
