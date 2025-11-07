@@ -1,3 +1,10 @@
+## [1.3.1](https://github.com/wan-ilhami/resumeje/compare/v1.3.0...v1.3.1) (2025-11-07)
+
+
+### Bug Fixes
+
+* layout for every page ([4bea008](https://github.com/wan-ilhami/resumeje/commit/4bea008afb5c0e63767379dcd9dd04ae221745f9))
+
 # [1.3.0](https://github.com/wan-ilhami/resumeje/compare/v1.2.1...v1.3.0) (2025-11-07)
 
 
