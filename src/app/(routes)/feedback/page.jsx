@@ -152,7 +152,7 @@ export default function FeedbackPage() {
                 <h1 className='text-4xl font-bold text-center pt-8'>Share Your Feedback</h1>
             </header>
 
-            <div className="min-h-screen">
+            <div className="">
                 <div className="w-full mx-auto px-4">
                     {/* Intro Section */}
                     <div className="flex items-center justify-center mb-8 text-center flex-col">
