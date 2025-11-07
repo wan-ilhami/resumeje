@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/wan-ilhami/resumeje/compare/v1.2.1...v1.3.0) (2025-11-07)
+
+
+### Features
+
+* add database prisma and page feedback ([eea5a8d](https://github.com/wan-ilhami/resumeje/commit/eea5a8dcb67fec88e1f41e5cbd2415f227ae0370))
+
 ## [1.2.1](https://github.com/wan-ilhami/resumeje/compare/v1.2.0...v1.2.1) (2025-11-01)
 
 
