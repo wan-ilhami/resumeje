@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/wan-ilhami/resumeje/compare/v1.2.0...v1.2.1) (2025-11-01)
+
+
+### Bug Fixes
+
+* remove seo and updated code ([4c7bd42](https://github.com/wan-ilhami/resumeje/commit/4c7bd424a0cd70385be1502a6c8af5a4c161a190))
+
 # [1.2.0](https://github.com/wan-ilhami/resumeje/compare/v1.1.0...v1.2.0) (2025-11-01)
 
 
