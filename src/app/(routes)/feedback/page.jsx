@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { Trash2, Send, LogOut } from 'lucide-react'
 import AuthSection from '../../components/forms/login.auth'
+import Loading from '@/loading'
 
 export default function FeedbackPage() {
     const [messages, setMessages] = useState([])
@@ -144,7 +145,7 @@ export default function FeedbackPage() {
         return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
     }
 
-    if (!mounted) return null
+    if (!mounted) return <Loading />
 
     return (
         <div className="w-full">
