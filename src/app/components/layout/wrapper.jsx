@@ -68,7 +68,7 @@ const LayoutWrapper = ({ children }) => {
         </nav>
       )}
 
-      <main className='h-screen flex-grow'>
+      <main className='flex-grow'>
         <SectionContainer>
           {children}
         </SectionContainer>
