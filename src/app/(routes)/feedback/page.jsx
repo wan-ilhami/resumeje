@@ -147,7 +147,7 @@ export default function FeedbackPage() {
     if (!mounted) return null
 
     return (
-        <div className="w-full min-h-screen">
+        <div className="w-full">
             <header className='mb-10'>
                 <h1 className='text-4xl font-bold text-center pt-8'>Share Your Feedback</h1>
             </header>

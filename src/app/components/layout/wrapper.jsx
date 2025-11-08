@@ -14,7 +14,7 @@ const LayoutWrapper = ({ children }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <div className="flex h-full w-full flex-col justify-between">
+    <div className="flex flex-col min-h-screen">
       {/* Desktop Header */}
       <header className="hidden sm:flex items-center justify-center py-10 px-6">
         <div className="flex items-center text-base leading-5 space-x-4">
@@ -73,6 +73,7 @@ const LayoutWrapper = ({ children }) => {
           {children}
         </SectionContainer>
       </main>
+      
       <Footer />
     </div>
   )
