@@ -43,14 +43,22 @@ jobs:
 
           if [ "$COMPONENT" = "frontend" ]; then
             TITLE="Frontend v${VERSION}"
+            SOURCE_REPO="wan-ilhami/resumeje-frontend"
           else
             TITLE="Backend v${VERSION}"
+            SOURCE_REPO="wan-ilhami/resumeje-backend"
           fi
 
           TAG="${COMPONENT}-v${VERSION}"
 
-          printf '## Platform Versions\n\n| Package | Version |\n|---|---|\n| Frontend | %s |\n| Backend | %s |\n' \
-            "$FRONTEND_VER" "$BACKEND_VER" > /tmp/release-notes.md
+          SOURCE_NOTES=$(gh release view "v${VERSION}" --repo "$SOURCE_REPO" --json body --jq '.body' 2>/dev/null || echo "")
+
+          {
+            printf '## Platform Versions\n\n| Package | Version |\n|---|---|\n| Frontend | %s |\n| Backend | %s |\n' "$FRONTEND_VER" "$BACKEND_VER"
+            if [ -n "$SOURCE_NOTES" ]; then
+              printf '\n\n---\n\n## Changes\n\n%s\n' "$SOURCE_NOTES"
+            fi
+          } > /tmp/release-notes.md
 
           gh release create "$TAG" \
             --title "$TITLE" \
