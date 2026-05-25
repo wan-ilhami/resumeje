@@ -26,26 +26,21 @@ Everything is free to use. No watermarks. No sign-up required for core features.
 
 ## This Repository
 
-This is the **public** centralized repository for ResumeJe.
+This is the **public** repository for ResumeJe.
 
-It serves as the shared contract layer and public release tracker for the ResumeJe platform. The private `frontend` and `backend` packages both consume the data contract described here.
+It serves as the public showcase, data contract reference, and release tracker for the ResumeJe platform. The actual `frontend` and `backend` source code lives in separate private repositories.
 
-This repository contains:
-- The `ResumeFormData` type definition — the canonical shape of a ResumeJe resume
-- Architecture documentation and diagrams
-- Public release tracking and version history
+**What's here:**
+- Public-facing product description and feature overview
+- The canonical `ResumeFormData` type definition — the data contract all surfaces share
+- Platform architecture overview
+- Live version tracking for frontend and backend (auto-updated on every release)
 
-It does **not** contain:
-- Frontend or backend application code
-- API endpoints or server configuration
-- Environment variables, secrets, or internal URLs
-- Database schemas or proprietary AI prompt templates
-
----
-
-## Live Site
-
-[https://resumeje.com](https://resumeje.com)
+**Not here:**
+- Frontend or backend source code (private repos)
+- API endpoint documentation or server configuration
+- Environment variables, secrets, or connection strings
+- Database schemas or AI prompt templates
 
 ---
 
@@ -56,13 +51,13 @@ It does **not** contain:
 | Frontend | <!-- FRONTEND_VERSION -->1.0.0<!-- /FRONTEND_VERSION --> |
 | Backend | <!-- BACKEND_VERSION -->1.0.0<!-- /BACKEND_VERSION --> |
 
-Versions are kept in sync automatically — when either package pushes a release to `master`, GitHub Actions dispatches a `version-updated` event here and updates this table.
+Versions update automatically — each push to `master` on the frontend or backend triggers a semantic-release run, which dispatches a `version-updated` event here. GitHub Actions then updates this table and creates a release on this repo.
 
 ---
 
 ## The Data Contract
 
-The centralized resume is the `ResumeFormData` shape — a single source of truth that every ResumeJe surface reads from and writes to:
+All ResumeJe surfaces — the builder, ATS checker, cover letter generator, export, share pages, and AI prompts — read from and write to a single canonical shape:
 
 ```ts
 interface ResumeFormData {
@@ -84,26 +79,30 @@ interface ResumeFormData {
 }
 ```
 
-Any surface that needs resume content — exports, AI prompts, ATS scoring, share URLs, email drafts — reads from this shape.
+Resume data is stored in the browser via `localStorage` (key: `resume_form_data`), with optional cloud sync for signed-in users. Because every surface reads from the same key, an edit in the resume builder is instantly reflected in the cover letter generator, ATS checker, templates, and share page.
 
 ---
 
 ## Architecture
 
-The platform is built across three packages:
+The platform runs across three packages:
 
 ```
 centralized-resume (this repo — public)
-    The data contract shared by all surfaces
+    Public showcase + data contract + release tracker
 
-frontend (private)
-    Next.js 16 app — the full product UI and server-side API routes
+frontend (private — Next.js 16)
+    Full product UI, server-side API proxy, Prisma + PostgreSQL
 
-backend (private)
-    Express 5 API — file parsing, AI inference, ATS scoring
+backend (private — Express 5)
+    File parsing, AI inference (Groq / Llama 3.3 70B), ATS scoring
 ```
 
-Resume data is stored in the browser via `localStorage` under the key `resume_form_data`, with optional cloud sync for signed-in users. An edit in the resume builder is immediately available in the cover letter generator, the ATS checker, the templates marketplace, and the share page — because all of them read from the same key.
+The browser never calls the backend directly. All requests go:
+
+```
+Browser → Next.js server routes → backend API
+```
 
 ---
 

@@ -31,3 +31,27 @@ jobs:
           git add README.md
           git diff --staged --quiet || git commit -m "chore: sync ${{ github.event.client_payload.component }} version to ${{ github.event.client_payload.version }} [skip ci]"
           git push
+
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COMPONENT: ${{ github.event.client_payload.component }}
+          VERSION: ${{ github.event.client_payload.version }}
+        run: |
+          FRONTEND_VER=$(grep -oP '(?<=<!-- FRONTEND_VERSION -->)[^<]+(?=<!-- /FRONTEND_VERSION -->)' README.md)
+          BACKEND_VER=$(grep -oP '(?<=<!-- BACKEND_VERSION -->)[^<]+(?=<!-- /BACKEND_VERSION -->)' README.md)
+
+          if [ "$COMPONENT" = "frontend" ]; then
+            TITLE="Frontend v${VERSION}"
+          else
+            TITLE="Backend v${VERSION}"
+          fi
+
+          TAG="${COMPONENT}-v${VERSION}"
+
+          printf '## Platform Versions\n\n| Package | Version |\n|---|---|\n| Frontend | %s |\n| Backend | %s |\n' \
+            "$FRONTEND_VER" "$BACKEND_VER" > /tmp/release-notes.md
+
+          gh release create "$TAG" \
+            --title "$TITLE" \
+            --notes-file /tmp/release-notes.md
