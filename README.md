@@ -1,14 +1,63 @@
-﻿# Centralized Résumé
+# ResumeJe
 
-> The **public**, dependency‑free description of the data contract that every ResumeJe surface speaks. No secrets, no internal URLs, no API keys — just the shape of a résumé and a map of how the pieces fit together.
+**AI-powered resume builder, ATS checker, and cover letter generator.**
 
-A shared résumé profile that follows the user across every ResumeJe surface — the structured builder, the upload/parse flow, the cover‑letter generator, the public share page, the templates marketplace, email/export flows, admin-safe operational surfaces, and future mobile / extension surfaces.
-
-The "centralized résumé" is the single source of truth for a user's résumé data. Anything that needs résumé content — exports, AI prompts, scoring, share URLs, email drafts — reads from this profile.
+[resumeje.com](https://resumeje.com)
 
 ---
 
-## 🧱 The Data Model
+## What is ResumeJe?
+
+ResumeJe is a free, AI-powered resume toolset that helps job seekers build, optimize, and share professional resumes.
+
+**Core features:**
+
+- **Resume Builder** — Structured, live-editing resume builder with auto-save and multiple export formats (PDF, DOCX)
+- **ATS Checker** — Score your resume against a job description to identify keyword gaps and improve your chances of passing applicant tracking systems
+- **Cover Letter Generator** — AI-generated, tailored cover letters built from your resume and the target job description
+- **Upload & Enhance** — Upload an existing PDF, DOCX, or TXT resume and let AI parse and improve it section by section
+- **Resume Sharing** — Generate a public share link for your resume with no account required
+- **Job Application Tracker** — Track your job applications, statuses, and notes in one place
+- **Templates Marketplace** — Choose from multiple professional resume templates
+
+Everything is free to use. No watermarks. No sign-up required for core features.
+
+---
+
+## This Repository
+
+This is the **public** centralized repository for ResumeJe.
+
+It serves as the shared contract layer and public release tracker for the ResumeJe platform. The private `frontend` and `backend` packages both consume the data contract described here.
+
+This repository contains:
+- The `ResumeFormData` type definition — the canonical shape of a ResumeJe resume
+- Architecture documentation and diagrams
+- Public release tracking and version history
+
+It does **not** contain:
+- Frontend or backend application code
+- API endpoints or server configuration
+- Environment variables, secrets, or internal URLs
+- Database schemas or proprietary AI prompt templates
+
+---
+
+## Live Site
+
+[https://resumeje.com](https://resumeje.com)
+
+---
+
+## Current Version
+
+See [CHANGELOG.md](./CODEBASE_REFERENCE.md) or the latest release tags for the current version. The version is kept in sync with the private frontend package automatically via GitHub Actions on every release.
+
+---
+
+## The Data Contract
+
+The centralized resume is the `ResumeFormData` shape — a single source of truth that every ResumeJe surface reads from and writes to:
 
 ```ts
 interface ResumeFormData {
@@ -30,139 +79,29 @@ interface ResumeFormData {
 }
 ```
 
-The canonical implementation lives in the **private** `frontend` package at `src/app/types/resume.ts`. This public package mirrors the shape for downstream consumers (mobile apps, browser extensions, future integrations) without exposing any of the internal product code.
-
-In‑browser persistence is via `localStorage` under the key `resume_form_data`. Helper signatures (`loadSavedResume`, `hasSavedResume`, `buildShortResumeSummary`) describe how every surface reads the centralized résumé. Export/email flows can transform the same data into PDF, DOCX, share links, and email-safe attachment payloads without changing the canonical contract.
+Any surface that needs resume content — exports, AI prompts, ATS scoring, share URLs, email drafts — reads from this shape.
 
 ---
 
-## 🏛 Architecture Diagram
+## Architecture
 
-The centralized résumé is the **contract layer** in the middle of a three‑tier system:
+The platform is built across three packages:
 
-```mermaid
-graph TB
-    User["👤 User"]
+```
+centralized-resume (this repo — public)
+    The data contract shared by all surfaces
 
-    subgraph FE["Frontend (private)"]
-        UI["Next.js 16 App Router · React 19"]
-        LS[("localStorage<br/>resume_form_data")]
-    end
+frontend (private)
+    Next.js 16 app — the full product UI and server-side API routes
 
-    subgraph Shared["🌐 centralized-resume (THIS REPO · public)"]
-        Type["ResumeFormData type"]
-        Docs["Architecture docs & diagrams"]
-    end
-
-    subgraph BE["Backend (private)"]
-        Parser["Parser service"]
-        AI["AI service"]
-    end
-
-    User --> UI
-    UI <--> LS
-    FE -.consumes contract.-> Shared
-    BE -.consumes contract.-> Shared
-    UI -.fetch.-> BE
-
-    classDef priv fill:#fee2e2,stroke:#dc2626,color:#7f1d1d
-    classDef pub fill:#dcfce7,stroke:#16a34a,color:#14532d
-    class FE,BE priv
-    class Shared pub
+backend (private)
+    Express 5 API — file parsing, AI inference, ATS scoring
 ```
 
-### Surface map
-
-Every consumer reads from and writes to the same `ResumeFormData` shape:
-
-```mermaid
-flowchart LR
-    LS[("localStorage<br/>resume_form_data")]
-    LS <--> R[/resume builder/]
-    LS <-- parsed --- U[/upload + LinkedIn import/]
-    LS --> C[/cover-letter generator/]
-    LS --> T[/templates marketplace/]
-    LS --> S[/u/[slug] share page/]
-    LS --> E[Email résumé attachments]
-    LS --> X[Export to PDF / DOCX]
-    LS -.metadata only.-> A[/admin security review/]
-```
-
-An edit in the builder shows up immediately in the cover‑letter generator, the share page, and the templates marketplace — because all of them read the same key.
+Resume data is stored in the browser via `localStorage` under the key `resume_form_data`, with optional cloud sync for signed-in users. An edit in the resume builder is immediately available in the cover letter generator, the ATS checker, the templates marketplace, and the share page — because all of them read from the same key.
 
 ---
 
-## ✅ What You Can Do With the Centralized Résumé
-
-The centralized résumé powers every productive flow in ResumeJe:
-
-- 📝 **Structured builder** (`/resume`) — live edit with auto‑save
-- 📤 **Upload + parse** (`/upload`) — PDF / DOCX / TXT → `ResumeFormData`
-- 🔗 **LinkedIn profile import** — populates the form from a pasted profile
-- 🤖 **Live ATS score badge** — debounced scoring as you type
-- 💡 **Skill suggestions** — job‑market dataset surfaces skills you're missing
-- 📄 **Export to PDF** — formatted PDF output for download/email workflows
-- 📄 **Export to DOCX** — zero‑dependency OOXML writer with email-safe spacing/pagination mode
-- 🌐 **Public share page** (`/u/{slug}`) — base‑64 payload in the URL, no server needed
-- 🛍 **Templates marketplace** (`/templates`) — pick a style, jump into builder pre‑filled
-- ✍️ **Cover‑letter linker** — `/upload` and `/cover-letter` share the same résumé profile
-- ✉️ **Email résumé flow** — generates email-ready résumé attachments/share context from the same profile data
-- 🛡️ **Admin/security visibility** — admin tools may review metadata, delivery events, and audit trails, but should not alter the public résumé data contract
-
----
-
-## 🔁 Lifecycle of a Single Edit
-
-```mermaid
-sequenceDiagram
-    actor U as User
-    participant UI as UI Component
-    participant Hook as Form / Hook Layer
-    participant LS as localStorage
-    participant Other as Other Surface (cover letter / share)
-
-    U->>UI: Type / paste / pick
-    UI->>Hook: onFormChange(updates)
-    Hook->>LS: setItem("resume_form_data", JSON)
-    Note over LS: Source of truth updated
-    U->>Other: Navigate
-    Other->>LS: loadSavedResume()
-    LS-->>Other: ResumeFormData
-    Other-->>U: Pre-filled UI
-```
-
----
-
-## 🚀 Future Extensions
-
-- **Multi‑résumé profiles** — switch between résumés tailored to different roles
-- **Cloud sync** via the private backend service
-- **Version history** — every save snapshotted, easy rollback
-- **Diff view** between two résumé versions
-- **Stable public profile URL** that survives edits (instead of payload‑in‑URL)
-- **Admin-reviewed operational metadata** for export/email/security events without exposing customer résumé content in public docs
-
----
-
-## 🔐 Public Repo Policy
-
-This package is **public**. By design it contains:
-
-- ✅ The `ResumeFormData` shape
-- ✅ Helper function signatures
-- ✅ Architecture diagrams and documentation
-
-It **never** contains:
-
-- ❌ API keys, tokens, deploy secrets
-- ❌ Internal URLs, hostnames, or environment configuration
-- ❌ Proprietary prompt templates or scoring formulas
-- ❌ Customer data, sample PII, or personal email addresses
-
-If you're contributing to this package and you find yourself reaching for a value that would belong in a `.env` file — stop. That belongs in the private `frontend` or `backend` package instead.
-
----
-
-## 📜 License
+## License
 
 MIT
