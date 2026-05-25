@@ -49,9 +49,14 @@ It does **not** contain:
 
 ---
 
-## Current Version
+## Current Versions
 
-See [CHANGELOG.md](./CODEBASE_REFERENCE.md) or the latest release tags for the current version. The version is kept in sync with the private frontend package automatically via GitHub Actions on every release.
+| Package | Version |
+|---|---|
+| Frontend | <!-- FRONTEND_VERSION -->1.0.0<!-- /FRONTEND_VERSION --> |
+| Backend | <!-- BACKEND_VERSION -->1.0.0<!-- /BACKEND_VERSION --> |
+
+Versions are kept in sync automatically — when either package pushes a release to `master`, GitHub Actions dispatches a `version-updated` event here and updates this table.
 
 ---
 

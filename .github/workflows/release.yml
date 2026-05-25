@@ -1,34 +1,17 @@
-name: Release
+# This workflow is intentionally disabled.
+# Version updates are handled by sync-versions.yml via repository_dispatch
+# from the frontend and backend private repos.
+#
+# The centralized-resume repo does not run semantic-release itself —
+# it receives version-updated events and updates README.md in response.
+
+name: Release (disabled)
 
 on:
-  push:
-    branches: [main]
-
-permissions:
-  contents: write
-  issues: write
-  pull-requests: write
+  workflow_dispatch:
 
 jobs:
-  release:
+  noop:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-
-      - uses: actions/setup-node@v3
-        with:
-          node-version: '22'
-
-      - uses: oven-sh/setup-bun@v1
-        with:
-          bun-version: latest
-
-      - run: cd centralized-resume && bun install
-        env:
-          BUN_INSTALL_CACHE_DIR: /tmp/bun-cache
-
-      - run: cd centralized-resume && bun run release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - run: echo "Use sync-versions.yml — this workflow is a no-op."
