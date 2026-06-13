@@ -49,7 +49,7 @@ It serves as the public showcase, data contract reference, and release tracker f
 | Package | Version |
 |---|---|
 | Frontend | <!-- FRONTEND_VERSION -->1.2.0<!-- /FRONTEND_VERSION --> |
-| Backend | <!-- BACKEND_VERSION -->1.0.0<!-- /BACKEND_VERSION --> |
+| Backend | <!-- BACKEND_VERSION -->1.4.1<!-- /BACKEND_VERSION --> |
 
 Versions update automatically — each push to `master` on the frontend or backend triggers a semantic-release run, which dispatches a `version-updated` event here. GitHub Actions then updates this table and creates a release on this repo.
 
