@@ -8,39 +8,39 @@
 
 ## What is ResumeJe?
 
-ResumeJe is a free, AI-powered resume toolset that helps job seekers build, optimize, and share professional resumes.
+ResumeJe is an AI-powered toolset that helps job seekers build, optimize, and manage professional resumes.
 
 **Core features:**
 
-- **Resume Builder** — Structured, live-editing resume builder with auto-save and multiple export formats (PDF, DOCX)
-- **ATS Checker** — Score your resume against a job description to identify keyword gaps and improve your chances of passing applicant tracking systems
-- **Cover Letter Generator** — AI-generated, tailored cover letters built from your resume and the target job description
-- **Upload & Enhance** — Upload an existing PDF, DOCX, or TXT resume and let AI parse and improve it section by section
-- **Resume Sharing** — Generate a public share link for your resume with no account required
-- **Job Application Tracker** — Track your job applications, statuses, and notes in one place
-- **Templates Marketplace** — Choose from multiple professional resume templates
+- **Resume Builder** — structured live-editing builder with cloud autosave, a completion meter, and multiple export formats (PDF, DOCX)
+- **Upload & Enhance** — bring an existing PDF, DOCX, or TXT resume (or import a LinkedIn profile) and let AI parse and rewrite it section by section; scanned, image-only PDFs are handled with OCR
+- **ATS Checker** — score a resume against a job description to surface keyword gaps before an applicant tracking system does
+- **Cover Letter Generator** — tailored cover letters generated from your resume and the target role
+- **Templates** — professional resume templates, previewable before you commit
+- **Job Application Tracker** — companies, roles, statuses, and notes in one pipeline
+- **Career Tools** — skills analysis, application packs, and interview preparation
+- **Account & Privacy** — Google or email sign-in, full data export, and one-click account deletion
 
-Everything is free to use. No watermarks. No sign-up required for core features.
+Building, analyzing, and generating require a free account, because every resume is stored against your user.
 
 ---
 
 ## This Repository
 
-This is the **public** repository for ResumeJe.
+This is the **public** repository for ResumeJe. It is the public showcase, the data-contract reference, and the release tracker. The `frontend` and `backend` source code lives in separate private repositories.
 
-It serves as the public showcase, data contract reference, and release tracker for the ResumeJe platform. The actual `frontend` and `backend` source code lives in separate private repositories.
-
-**What's here:**
-- Public-facing product description and feature overview
-- The canonical `ResumeFormData` type definition — the data contract all surfaces share
-- Platform architecture overview
+**What's here**
+- Public product description and feature overview
+- The canonical `ResumeFormData` shape — the contract every surface shares
+- A high-level architecture summary
 - Live version tracking for frontend and backend (auto-updated on every release)
+- Local development orchestration scripts (`package.json`) used by maintainers to run both private packages together
 
-**Not here:**
-- Frontend or backend source code (private repos)
-- API endpoint documentation or server configuration
+**Not here**
+- Frontend or backend source code
+- Endpoint documentation, server configuration, or infrastructure detail
 - Environment variables, secrets, or connection strings
-- Database schemas or AI prompt templates
+- Database schema or AI prompt templates
 
 ---
 
@@ -51,13 +51,13 @@ It serves as the public showcase, data contract reference, and release tracker f
 | Frontend | <!-- FRONTEND_VERSION -->1.2.0<!-- /FRONTEND_VERSION --> |
 | Backend | <!-- BACKEND_VERSION -->1.4.2<!-- /BACKEND_VERSION --> |
 
-Versions update automatically — each push to `master` on the frontend or backend triggers a semantic-release run, which dispatches a `version-updated` event here. GitHub Actions then updates this table and creates a release on this repo.
+Versions update automatically: each push to `master` in the frontend or backend runs semantic-release, which dispatches a `version-updated` event here. GitHub Actions then refreshes this table and cuts a release on this repo.
 
 ---
 
 ## The Data Contract
 
-All ResumeJe surfaces — the builder, ATS checker, cover letter generator, export, share pages, and AI prompts — read from and write to a single canonical shape:
+Every ResumeJe surface — builder, ATS checker, cover letter generator, exports, templates — reads and writes one canonical shape:
 
 ```ts
 interface ResumeFormData {
@@ -70,38 +70,39 @@ interface ResumeFormData {
   linkedin?: string;
   portfolio?: string;
   professionalSummary: string;
-  education: EducationEntry[];
-  experience: ExperienceEntry[];
+  education: EducationItem[];
+  experience: ExperienceItem[];
   skills: { category: string; skills: string }[];
   certifications: string[];
-  projects: ProjectEntry[];
+  projects: ProjectItem[];
   languages: string[];
+  strengths?: string[];
+  keyAchievements?: string[];
+  interests?: string[];
 }
 ```
 
-Resume data is stored in the browser via `localStorage` (key: `resume_form_data`), with optional cloud sync for signed-in users. Because every surface reads from the same key, an edit in the resume builder is instantly reflected in the cover letter generator, ATS checker, templates, and share page.
+Saved resumes live in the account's database record; the resume currently being edited is held in application state and mirrored to the browser's local storage so a reload doesn't lose work. Because every surface reads the same shape, an edit in the builder flows straight into the cover letter generator, the ATS checker, the templates, and every export.
 
 ---
 
 ## Architecture
 
-The platform runs across three packages:
-
 ```
 centralized-resume (this repo — public)
-    Public showcase + data contract + release tracker
+    Public showcase + data contract + release tracker + dev orchestration
 
-frontend (private — Next.js 16)
-    Full product UI, server-side API proxy, Prisma + PostgreSQL
+frontend (private — Next.js 16, React 19)
+    Product UI, server-side routes, account data, admin tooling
 
-backend (private — Express 5)
-    File parsing, AI inference (Groq / Llama 3.3 70B), ATS scoring
+backend (private — Express 5 on Bun)
+    File parsing and OCR, AI inference, ATS scoring
 ```
 
-The browser never calls the backend directly. All requests go:
+The browser never calls the parsing/AI service directly. Every request goes:
 
 ```
-Browser → Next.js server routes → backend API
+Browser → frontend server routes → backend service
 ```
 
 ---
