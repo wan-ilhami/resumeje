@@ -48,7 +48,7 @@ This is the **public** repository for ResumeJe. It is the public showcase, the d
 
 | Package | Version |
 |---|---|
-| Frontend | <!-- FRONTEND_VERSION -->1.4.0<!-- /FRONTEND_VERSION --> |
+| Frontend | <!-- FRONTEND_VERSION -->1.5.0<!-- /FRONTEND_VERSION --> |
 | Backend | <!-- BACKEND_VERSION -->1.5.0<!-- /BACKEND_VERSION --> |
 
 Versions update automatically: each push to `master` in the frontend or backend runs semantic-release, which dispatches a `version-updated` event here. GitHub Actions then refreshes this table and cuts a release on this repo.
